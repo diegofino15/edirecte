@@ -5,18 +5,17 @@ double? getVal(String str) => double.tryParse(str.replaceAll(",", "."));
 
 class Grade {
   String title = "";
-  
-  double value = 0.0;
-  double classValue = 0.0;
-
-  late double valueOn;
-  late double? initialValue;
 
   late String initialValueStr;
   late String initialValueOnStr;
+  late String initialClassValueStr;
   
-  late double coefficient;
-  bool isEffective = true;
+  double value = 0.0;
+  double valueOn = 20.0;
+  double classValue = 0.0;  
+  
+  double coefficient = 1.0;
+  bool isEffective = false;
 
   late String subjectCode;
   late String subjectName;
@@ -30,23 +29,18 @@ class Grade {
 
     initialValueStr = jsonInformations["valeur"];
     initialValueOnStr = jsonInformations["noteSur"];
+    initialClassValueStr = jsonInformations["moyenneClasse"];
 
-    initialValue = getVal(jsonInformations["valeur"]);
-    valueOn = getVal(jsonInformations["noteSur"])!;
+    double gradeValue = getVal(initialValueStr) ?? -1;
+    valueOn = getVal(initialValueOnStr)!;
 
     coefficient = calculateCoefficient(title);
-
-    // Try to calculate the real value //
-    if (jsonInformations["nonSignificatif"] || initialValue == null) {
-      isEffective = false;
-    } else {
-      value = initialValue! / valueOn * 20.0;
-      // Round to value to 2 decimals //
-      value = (value * 100.0).round() / 100.0;
+    
+    if (gradeValue != -1 && !jsonInformations["nonSignificatif"]) {
+      value = gradeValue / valueOn * 20.0;
+      classValue = getVal(initialClassValueStr)! / valueOn * 20.0;
+      isEffective = true;
     }
-
-    classValue = (getVal(jsonInformations["moyenneClasse"]) ?? 0.0) / valueOn * 20.0;
-    classValue = (classValue * 100.0).round() / 100.0;
 
     subjectCode = jsonInformations["codeMatiere"];
     subjectName = jsonInformations["libelleMatiere"];
@@ -66,7 +60,8 @@ class Grade {
     return 1.0;
   }
 
-  String get showableStr => valueOn == 20 ? initialValueStr : "$initialValueStr/$initialValueOnStr";
+  String get showableStr => (valueOn == 20 || !isEffective) ? initialValueStr : "$initialValueStr/$initialValueOnStr";
+  String get showableClassStr => isEffective ? valueOn == 20 ? initialClassValueStr : "$initialClassValueStr/$initialValueOnStr" : "--";
 }
 
 class GeneralAverage {

@@ -42,6 +42,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   void initState() {
     super.initState();
+
+    if (ScheduleHandler.actualDisplayedDayStr.compareTo(GlobalInfos.actualDayStr_) == 0) {
+      ScheduleHandler.actualDisplayedDay = ScheduleHandler.nextClassTime;
+    }
+
     _updateScreen();
   }
   
@@ -49,7 +54,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Future<void> _handleRefresh() async {
     if (StoredInfos.isUserLoggedIn) {
       setState(() {
-        GlobalInfos.updateActualDay();
+        ScheduleHandler.actualDisplayedDay = GlobalInfos.actualDay_;
         ScheduleHandler.getSchedule().then((value) => setState(() => {}));
       });
     }
@@ -57,14 +62,14 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   
   @override
   Widget build(BuildContext context) {
-    int currentDayScheduledClassNumber = GlobalInfos.scheduledClasses.containsKey(GlobalInfos.actualDayStr) ? GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr]!.length : 0;
+    int currentDayScheduledClassNumber = GlobalInfos.scheduledClasses.containsKey(ScheduleHandler.actualDisplayedDayStr) ? GlobalInfos.scheduledClasses[ScheduleHandler.actualDisplayedDayStr]!.length : 0;
     
-    if (!ScheduleHandler.loadedDays.contains(GlobalInfos.actualDayStr)) {
-      if (!(ScheduleHandler.isGettingSpecificDay[GlobalInfos.actualDayStr] ?? false)) {
-        ScheduleHandler.isGettingSpecificDay.putIfAbsent(GlobalInfos.actualDayStr, () => true);
+    if (!ScheduleHandler.loadedDays.contains(ScheduleHandler.actualDisplayedDayStr)) {
+      if (!(ScheduleHandler.isGettingSpecificDay[ScheduleHandler.actualDisplayedDayStr] ?? false)) {
+        ScheduleHandler.isGettingSpecificDay.putIfAbsent(ScheduleHandler.actualDisplayedDayStr, () => true);
         setState(() => {
           ScheduleHandler.getSchedule(daysMoreAndLeft: 0, eraseAll: false).then((value) => setState(() {
-            ScheduleHandler.isGettingSpecificDay[GlobalInfos.actualDayStr] = false;
+            ScheduleHandler.isGettingSpecificDay[ScheduleHandler.actualDisplayedDayStr] = false;
           }))
         });
       }
@@ -90,9 +95,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                GestureDetector(onTap: () => setState(() => {GlobalInfos.actualDay = GlobalInfos.actualDay.add(const Duration(days: -1))}), child: const Icon(FluentIcons.arrow_left_24_filled)),
-                Text(dayToBeautifulStr(GlobalInfos.actualDay), style: EDirecteStyles.itemTitleTextStyle),
-                GestureDetector(onTap: () => setState(() => {GlobalInfos.actualDay = GlobalInfos.actualDay.add(const Duration(days: 1))}), child: const Icon(FluentIcons.arrow_right_24_filled)),
+                GestureDetector(onTap: () => setState(() => {ScheduleHandler.actualDisplayedDay = ScheduleHandler.actualDisplayedDay.add(const Duration(days: -1))}), child: const Icon(FluentIcons.arrow_left_24_filled)),
+                Text(dayToBeautifulStr(ScheduleHandler.actualDisplayedDay), style: EDirecteStyles.itemTitleTextStyle),
+                GestureDetector(onTap: () => setState(() => {ScheduleHandler.actualDisplayedDay = ScheduleHandler.actualDisplayedDay.add(const Duration(days: 1))}), child: const Icon(FluentIcons.arrow_right_24_filled)),
               ],
             ),
           ),
@@ -102,13 +107,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               children: List.generate(
                 currentDayScheduledClassNumber,
                 (index) {
-                  String scheduledClassHour = GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr]!.keys.elementAt(index);
-                  List<ScheduledClass> scheduledClasses = GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr]![scheduledClassHour]!;
+                  String scheduledClassHour = GlobalInfos.scheduledClasses[ScheduleHandler.actualDisplayedDayStr]!.keys.elementAt(index);
+                  List<ScheduledClass> scheduledClasses = GlobalInfos.scheduledClasses[ScheduleHandler.actualDisplayedDayStr]![scheduledClassHour]!;
                   
                   int pauseUntilNextHour = 0;
-                  if (GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr]!.keys.length > (index + 1)) {
-                    String nextClassHour = GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr]!.keys.elementAt(index + 1);
-                    ScheduledClass nextClass = GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr]![nextClassHour]![0];
+                  if (GlobalInfos.scheduledClasses[ScheduleHandler.actualDisplayedDayStr]!.keys.length > (index + 1)) {
+                    String nextClassHour = GlobalInfos.scheduledClasses[ScheduleHandler.actualDisplayedDayStr]!.keys.elementAt(index + 1);
+                    ScheduledClass nextClass = GlobalInfos.scheduledClasses[ScheduleHandler.actualDisplayedDayStr]![nextClassHour]![0];
                     pauseUntilNextHour = nextClass.beginDate.difference(scheduledClasses[0].endDate).inMinutes;
                   }
                   
@@ -116,10 +121,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     children: [
                       // Main widget //
                       ScheduledClassCard(scheduledClasses: scheduledClasses),
+                      
+                      // Gap after widget //
+                      Gap(index == GlobalInfos.scheduledClasses[ScheduleHandler.actualDisplayedDayStr]!.length - 1 ? 0 : (pauseUntilNextHour > 15) || pauseUntilNextHour == 0 ? 10.0 : 5.0),
+                      
                       // Bar to show pause before next class //
-                      Gap(index == GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr]!.length - 1 ? 0 : 10.0),
                       Bar(width: pauseUntilNextHour > 15 ? 250.0 : 200.0, height: pauseUntilNextHour > 0 ? pauseUntilNextHour > 15 ? 4.0 : 3.0 : 0.0, color: Colors.grey),
-                      Gap(pauseUntilNextHour > 0 ? 10.0 : 0.0),
+                      Gap(pauseUntilNextHour > 0 ? ((pauseUntilNextHour > 15) ? 10.0 : 5.0) : 0.0),
                     ],
                   );
                 },

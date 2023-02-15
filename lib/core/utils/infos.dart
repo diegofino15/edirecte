@@ -11,9 +11,11 @@ class GlobalInfos {
   static String get currentPeriodCode => "A00$currentPeriodIndex";
 
   // Actual day //
-  static void updateActualDay() => GlobalInfos.actualDay = DateTime.now();
-  static DateTime actualDay = DateTime.now();
-  static String get actualDayStr => GlobalInfos.actualDay.toString().split(" ")[0];
+  static DateTime actualDay_ = DateTime.now();
+  static String get actualDayStr_ => GlobalInfos.actualDay_.toString().split(" ")[0];
+  // static void updateActualDay() => GlobalInfos.actualDay = DateTime.now();
+  // static DateTime actualDay = DateTime.now();
+  // static String get actualDayStr => GlobalInfos.actualDay.toString().split(" ")[0];
 
   // List of all the timeline objects //
   static List<TimelineEvent> timelineEvents = [];

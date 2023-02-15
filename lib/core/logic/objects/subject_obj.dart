@@ -33,10 +33,10 @@ class Subject {
         if (grade.isEffective) {
           sum += grade.value * grade.coefficient;
           coef += grade.coefficient;
-        }
 
-        sumClass += grade.classValue * grade.coefficient;
-        coefClass += grade.coefficient;
+          sumClass += grade.classValue * grade.coefficient;
+          coefClass += grade.coefficient;
+        }
       }
 
       average[periodCode] = coef != 0.0 ? (sum / coef) : 0.0;

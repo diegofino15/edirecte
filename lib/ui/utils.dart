@@ -1,5 +1,5 @@
 String rem0(double n) {
-    return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 1).replaceAll(".", ",");
+    return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2).replaceAll(".", ",");
 }
 
 const List<String> daysNames = [

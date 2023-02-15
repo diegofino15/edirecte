@@ -55,9 +55,7 @@ class GlobalHandler {
 
   // Main function to erase all saved data //
   static void eraseEverything() {
-    GlobalInfos.subjects.clear();
-    GlobalInfos.updateActualDay();
-    
+    GlobalInfos.subjects.clear();    
     TimelineHandler.reset();
     GradesHandler.reset();
     HomeworkHandler.reset();

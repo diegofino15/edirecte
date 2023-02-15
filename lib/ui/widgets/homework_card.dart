@@ -68,7 +68,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
           height: 290.0,
           child: ListView(
             padding: const EdgeInsets.symmetric(vertical: 10.0),
-            children: [Text(homework.content, style: EDirecteStyles.itemTextStyle)],
+            children: [Text(homework.content!, style: EDirecteStyles.itemTextStyle)],
           )
         ),
         Bar(width: MediaQuery.of(context).size.width, height: 3.0, color: EDirecteColors.getSubjectColor(homework.subject.code, 1)),
@@ -119,7 +119,7 @@ class _HomeworkCardState extends State<HomeworkCard> {
                               },
                               child: Row(
                                 children: [
-                                  Bar(width: 2.0, height: 50.0, color: EDirecteColors.getSubjectColor(homework.subject.code, 0)),
+                                  Bar(width: 3.0, height: 50.0, color: EDirecteColors.getSubjectColor(homework.subject.code, 0)),
                                   const Gap(10.0),
                                   Text(homework.subject.name, style: EDirecteStyles.itemTextStyle.copyWith(color: homework.isExam ? Colors.red : Colors.black54))
                                 ],

@@ -38,7 +38,7 @@ class _SubjectCardState extends State<SubjectCard> {
                 color: EDirecteColors.getSubjectColor(widget.subject.code, 0),
                 borderRadius: const BorderRadius.all(Radius.circular(20.0)),
               ),
-              child: Center(child: Text(widget.subject.average[GlobalInfos.currentPeriodCode].toString().replaceAll(".", ","), style: EDirecteStyles.numberTextStyle)),
+              child: Center(child: Text(rem0(widget.subject.average[GlobalInfos.currentPeriodCode] ?? 0.0), style: EDirecteStyles.numberTextStyle)),
             ),
             const Gap(20.0),
             Column(
@@ -99,7 +99,7 @@ class _SubjectCardState extends State<SubjectCard> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Classe : ${grade.classValue}", style: EDirecteStyles.itemTextStyle),
+                      Text("Classe : ${grade.showableClassStr}", style: EDirecteStyles.itemTextStyle),
                       const Text("-", style: EDirecteStyles.itemTextStyle),
                       Text("Coef : ${rem0(grade.coefficient)}", style: EDirecteStyles.itemTextStyle),
                     ],
@@ -158,7 +158,7 @@ class _SubjectCardState extends State<SubjectCard> {
                 );
               },
               separatorBuilder: (BuildContext c, int index) {
-                return SizedBox(width: index == widget.subject.grades[GlobalInfos.currentPeriodCode]!.length - 1 ? 0.0 : 15.0);
+                return Gap(index == widget.subject.grades[GlobalInfos.currentPeriodCode]!.length - 1 ? 0.0 : 15.0);
               },
             ),
           ),

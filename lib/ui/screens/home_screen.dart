@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       return GradeCard(grade: GlobalInfos.grades[GlobalInfos.grades.length - index - 1]);
                     },
                     separatorBuilder: (BuildContext c, int index) {
-                      return SizedBox(width: index == min(10, GlobalInfos.grades.length) - 1 ? 0.0 : 10.0);
+                      return Gap(index == min(10, GlobalInfos.grades.length) - 1 ? 0.0 : 10.0);
                     },
                   ),
                 ) : Container(),
@@ -128,7 +128,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 Gap(ScheduleHandler.gotSchedule ? 10.0 : 0.0),
-                ScheduleHandler.gotSchedule ? ScheduledClassCard(scheduledClasses: ScheduleHandler.getNextScheduledClass() ?? []) : Container(),
+                ScheduleHandler.gotSchedule ? ScheduledClassCard(scheduledClasses: ScheduleHandler.getNextScheduledClass() ?? [], showOutline: false) : Container(),
               ],
             ),
           ),
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       return TimelineCard(timelineEvent: GlobalInfos.timelineEvents[index]);
                     },
                     separatorBuilder: (BuildContext c, int index) {
-                      return SizedBox(width: index == min(10, GlobalInfos.timelineEvents.length) - 1 ? 0.0 : 10.0);
+                      return Gap(index == min(10, GlobalInfos.timelineEvents.length) - 1 ? 0.0 : 10.0);
                     },
                   ),
                 ) : Container(),

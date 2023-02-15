@@ -60,7 +60,7 @@ class Homework {
   late DateTime day;
 
   late bool isExam;
-  late String content;
+  String? content;
 
   Homework(this.day, this.subject, Map jsonInfos) {
     id = jsonInfos["idDevoir"];

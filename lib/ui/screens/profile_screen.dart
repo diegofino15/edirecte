@@ -346,16 +346,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text("Devine coefficient notes", style: EDirecteStyles.itemTextStyle),
-                      GestureDetector(
-                        onTap: _handleExperimentalFeatures,
-                        child: const Icon(FluentIcons.info_24_regular, size: 20.0, color: Colors.grey),
-                      ),
-                      GestureDetector(
-                        onTap: () => setState(() {
-                          StoredInfos.guessGradeCoefficient = !StoredInfos.guessGradeCoefficient;
-                          FileHandler.instance.changeInfos({"guess_grade_coefficient": StoredInfos.guessGradeCoefficient});
-                        }),
-                        child: Icon(StoredInfos.guessGradeCoefficient ? FluentIcons.checkbox_checked_24_filled : FluentIcons.checkbox_unchecked_24_regular)
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: _handleExperimentalFeatures,
+                            child: const Icon(FluentIcons.info_24_regular, size: 20.0, color: Colors.grey),
+                          ),
+                          const Gap(5.0),
+                          GestureDetector(
+                            onTap: () => setState(() {
+                              StoredInfos.guessGradeCoefficient = !StoredInfos.guessGradeCoefficient;
+                              FileHandler.instance.changeInfos({"guess_grade_coefficient": StoredInfos.guessGradeCoefficient});
+                            }),
+                            child: Icon(StoredInfos.guessGradeCoefficient ? FluentIcons.checkbox_checked_24_filled : FluentIcons.checkbox_unchecked_24_regular)
+                          ),
+                        ],
                       ),
                     ],
                   ),

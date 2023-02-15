@@ -1,3 +1,4 @@
+import 'package:edirecte/core/logic/handlers/schedule_handler.dart';
 import 'package:flutter/material.dart';
 
 import 'package:gap/gap.dart';
@@ -10,10 +11,12 @@ import 'package:edirecte/core/logic/objects/schedule_obj.dart';
 // ignore: must_be_immutable
 class ScheduledClassCard extends StatelessWidget {
   final List<ScheduledClass> scheduledClasses;
+  bool showOutline;
 
-  const ScheduledClassCard({
+  ScheduledClassCard({
     super.key,
-    required this.scheduledClasses
+    required this.scheduledClasses,
+    this.showOutline = true
   });
 
   @override
@@ -25,9 +28,10 @@ class ScheduledClassCard extends StatelessWidget {
     return Container(
       height: 80.0,
       padding: const EdgeInsets.all(10.0),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: EDirecteColors.mainBackgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        border: Border.all(width: showOutline && ScheduleHandler.nextClassTime.compareTo(scheduledClasses[0].beginDate) == 0 ? 2.0 : 0.0, color: Colors.grey),
       ),
       child: Row(
         children: scheduledClasses.length == 1 ? [
@@ -46,7 +50,7 @@ class ScheduledClassCard extends StatelessWidget {
           Bar(width: 3.0, height: 50.0, color: EDirecteColors.getSubjectColor(scheduledClasses[0].subject.code, 1)),
           const Gap(10.0),
           SizedBox(
-            width: MediaQuery.of(context).size.width - 168,
+            width: MediaQuery.of(context).size.width - 172,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +60,7 @@ class ScheduledClassCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(width: MediaQuery.of(context).size.width - 100 - 68 - 40, child: Text(scheduledClasses[0].subject.professorName, style: EDirecteStyles.itemTextStyle, overflow: TextOverflow.ellipsis)),
+                    SizedBox(width: MediaQuery.of(context).size.width - 100 - 68 - 44, child: Text(scheduledClasses[0].subject.professorName, style: EDirecteStyles.itemTextStyle, overflow: TextOverflow.ellipsis)),
                     Text("- ${scheduledClasses[0].classroom.replaceAll(",", "")}", style: EDirecteStyles.itemTextStyle, overflow: TextOverflow.ellipsis),
                   ],
                 ),

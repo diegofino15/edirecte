@@ -12,6 +12,10 @@ class ScheduleHandler {
   // List of all the days loaded //
   static List<String> loadedDays = [];
 
+  // Actual day beeing displayed //
+  static DateTime actualDisplayedDay = DateTime.now();
+  static String get actualDisplayedDayStr => ScheduleHandler.actualDisplayedDay.toString().split(" ")[0];
+
   // Current state of connection //
   static bool gotSchedule = false;
   static bool isGettingSchedule = false;
@@ -32,8 +36,8 @@ class ScheduleHandler {
     dynamic scheduleResponse = await EcoleDirecteResponse.parse(
       EcoleDirectePath.scheduleURL,
       {
-        "dateDebut": GlobalInfos.actualDay.add(Duration(days: -daysMoreAndLeft)).toString().split(" ")[0],
-        "dateFin": GlobalInfos.actualDay.add(Duration(days: daysMoreAndLeft)).toString().split(" ")[0],
+        "dateDebut": ScheduleHandler.actualDisplayedDay.add(Duration(days: -daysMoreAndLeft)).toString().split(" ")[0],
+        "dateFin": ScheduleHandler.actualDisplayedDay.add(Duration(days: daysMoreAndLeft)).toString().split(" ")[0],
         "avecTrous": false
       },
     );
@@ -42,7 +46,7 @@ class ScheduleHandler {
       if (eraseAll) ScheduleHandler.reset();
 
       for (int i = -daysMoreAndLeft; i <= daysMoreAndLeft; i++) {
-        String dayStr = GlobalInfos.actualDay.add(Duration(days: i)).toString().split(" ")[0];
+        String dayStr = ScheduleHandler.actualDisplayedDay.add(Duration(days: i)).toString().split(" ")[0];
         ScheduleHandler.loadedDays.add(dayStr);
       }
 
@@ -76,6 +80,7 @@ class ScheduleHandler {
     ScheduleHandler.gotSchedule = false;
     ScheduleHandler.isGettingSchedule = false;
     ScheduleHandler.loadedDays.clear();
+    ScheduleHandler.actualDisplayedDay = GlobalInfos.actualDay_;
     GlobalInfos.scheduledClasses.clear();
   }
 
@@ -85,22 +90,19 @@ class ScheduleHandler {
 
   // Function to get the next scheduled class //
   static List<ScheduledClass>? getNextScheduledClass() {
-    DateTime actualTime = DateTime.now();
-    String actualDay = actualTime.toString().split(" ")[0];
-
-    if (GlobalInfos.scheduledClasses.containsKey(actualDay)) {
-      for (String hour in GlobalInfos.scheduledClasses[actualDay]!.keys) {
-        DateTime dateAndHour = DateTime.parse("$actualDay $hour");
-        if (dateAndHour.compareTo(actualTime) >= 0) {
+    if (GlobalInfos.scheduledClasses.containsKey(GlobalInfos.actualDayStr_)) {
+      for (String hour in GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr_]!.keys) {
+        DateTime dateAndHour = DateTime.parse("${GlobalInfos.actualDayStr_} $hour");
+        if (dateAndHour.compareTo(GlobalInfos.actualDay_) >= 0) {
           nextClassTime = dateAndHour;
-          return GlobalInfos.scheduledClasses[actualDay]![hour]!;
+          return GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr_]![hour]!;
         }
       }
     }
 
     const int dayToSee = 3;
     for (int i = 1; i < dayToSee; i++) {
-      DateTime nextDay = actualTime.add(Duration(days: i));
+      DateTime nextDay = GlobalInfos.actualDay_.add(Duration(days: i));
       String nextDayStr = nextDay.toString().split(" ")[0];
       if (GlobalInfos.scheduledClasses.containsKey(nextDayStr)) {
         String key = GlobalInfos.scheduledClasses[nextDayStr]!.keys.first;
