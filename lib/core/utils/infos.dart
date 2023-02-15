@@ -135,6 +135,7 @@ class StoredInfos {
     "HI-GE": 3.0,
     "AGL1": 3.0,
     "ESP2": 2.0,
+    "ALL2": 2.0,
     "SES": 2.0,
     "MATHS": 3.0,
     "PH-CH": 2.0,
