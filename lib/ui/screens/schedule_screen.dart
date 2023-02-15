@@ -44,7 +44,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     super.initState();
 
     if (ScheduleHandler.actualDisplayedDayStr.compareTo(GlobalInfos.actualDayStr_) == 0) {
-      ScheduleHandler.actualDisplayedDay = ScheduleHandler.nextClassTime;
+      ScheduleHandler.actualDisplayedDay = ScheduleHandler.nextClasses[0].beginDate;
     }
 
     _updateScreen();
@@ -54,8 +54,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Future<void> _handleRefresh() async {
     if (StoredInfos.isUserLoggedIn) {
       setState(() {
-        ScheduleHandler.actualDisplayedDay = GlobalInfos.actualDay_;
         ScheduleHandler.getSchedule().then((value) => setState(() => {}));
+        ScheduleHandler.actualDisplayedDay = GlobalInfos.actualDay_;
       });
     }
   }
@@ -63,7 +63,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   @override
   Widget build(BuildContext context) {
     int currentDayScheduledClassNumber = GlobalInfos.scheduledClasses.containsKey(ScheduleHandler.actualDisplayedDayStr) ? GlobalInfos.scheduledClasses[ScheduleHandler.actualDisplayedDayStr]!.length : 0;
-    
+
     if (!ScheduleHandler.loadedDays.contains(ScheduleHandler.actualDisplayedDayStr)) {
       if (!(ScheduleHandler.isGettingSpecificDay[ScheduleHandler.actualDisplayedDayStr] ?? false)) {
         ScheduleHandler.isGettingSpecificDay.putIfAbsent(ScheduleHandler.actualDisplayedDayStr, () => true);

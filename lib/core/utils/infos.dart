@@ -66,7 +66,7 @@ class GlobalInfos {
     if (GlobalInfos.subjects.containsKey(jsonInfos["codeMatiere"])) { scheduledClassSubject = GlobalInfos.subjects[jsonInfos["codeMatiere"]]!; }
     else { scheduledClassSubject = GlobalInfos.addSubject(subjectCode: jsonInfos["codeMatiere"], subjectName: jsonInfos["matiere"], professorName: jsonInfos["prof"]); }
 
-    ScheduledClass scheduledClass = ScheduledClass(scheduledClassSubject, jsonInfos["start_date"], jsonInfos["end_date"], jsonInfos["salle"]);
+    ScheduledClass scheduledClass = ScheduledClass(scheduledClassSubject, jsonInfos["start_date"], jsonInfos["end_date"], jsonInfos["salle"], jsonInfos["text"]);
     
     if (!GlobalInfos.scheduledClasses.containsKey(scheduledClass.day)) {
       GlobalInfos.scheduledClasses.addAll({scheduledClass.day: {}});

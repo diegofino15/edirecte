@@ -43,7 +43,7 @@ class ScheduleHandler {
     );
 
     if (scheduleResponse != null) {
-      if (eraseAll) ScheduleHandler.reset();
+      if (eraseAll) ScheduleHandler.reset(changeConnectionState: false);
 
       for (int i = -daysMoreAndLeft; i <= daysMoreAndLeft; i++) {
         String dayStr = ScheduleHandler.actualDisplayedDay.add(Duration(days: i)).toString().split(" ")[0];
@@ -76,26 +76,28 @@ class ScheduleHandler {
   }
 
   // Function to reset all saved data //
-  static void reset() {
+  static void reset({bool changeConnectionState = true}) {
     ScheduleHandler.gotSchedule = false;
-    ScheduleHandler.isGettingSchedule = false;
+    if (changeConnectionState) ScheduleHandler.isGettingSchedule = false;
     ScheduleHandler.loadedDays.clear();
     ScheduleHandler.actualDisplayedDay = GlobalInfos.actualDay_;
+    ScheduleHandler.calculatedNextClass = false;
     GlobalInfos.scheduledClasses.clear();
   }
 
   // Next class //
-  static DateTime nextClassTime = DateTime.now();
-  static Duration get timeBeforeNextClass => nextClassTime.difference(DateTime.now());
+  static bool calculatedNextClass = false;
+  static List<ScheduledClass> nextClasses = [];
+  static Duration get timeBeforeNextClass => nextClasses[0].beginDate.difference(DateTime.now());
 
-  // Function to get the next scheduled class //
-  static List<ScheduledClass>? getNextScheduledClass() {
+  static void calculateNextClass() {
     if (GlobalInfos.scheduledClasses.containsKey(GlobalInfos.actualDayStr_)) {
       for (String hour in GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr_]!.keys) {
         DateTime dateAndHour = DateTime.parse("${GlobalInfos.actualDayStr_} $hour");
         if (dateAndHour.compareTo(GlobalInfos.actualDay_) >= 0) {
-          nextClassTime = dateAndHour;
-          return GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr_]![hour]!;
+          nextClasses = GlobalInfos.scheduledClasses[GlobalInfos.actualDayStr_]![hour]!;
+          calculatedNextClass = true;
+          return;
         }
       }
     }
@@ -106,13 +108,13 @@ class ScheduleHandler {
       String nextDayStr = nextDay.toString().split(" ")[0];
       if (GlobalInfos.scheduledClasses.containsKey(nextDayStr)) {
         String key = GlobalInfos.scheduledClasses[nextDayStr]!.keys.first;
-        nextClassTime = DateTime.parse("$nextDayStr $key");
-        return GlobalInfos.scheduledClasses[nextDayStr]![key]!;
+        nextClasses = GlobalInfos.scheduledClasses[nextDayStr]![key]!;
+        calculatedNextClass = true;
+        return;
       }
     }
-
-    return null;
   }
+
 }
 
 

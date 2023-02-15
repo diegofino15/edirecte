@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
     GlobalHandler.isUpdated;
     
     while (mounted) {
-      while (Network.isConnecting || !GlobalHandler.isEverythingUpdated()) {
+      while (Network.isConnecting || !GlobalHandler.isEverythingUpdated() || !ScheduleHandler.calculatedNextClass) {
         await Future.delayed(const Duration(milliseconds: 200));
         setState(() => {});
       }
@@ -68,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     HomeworkDay? nextHomework = HomeworkHandler.getNextHomework();
+    if (!ScheduleHandler.calculatedNextClass) ScheduleHandler.calculateNextClass();
 
     return RefreshIndicator(
       onRefresh: _handleRefresh,
@@ -91,6 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text("Moyenne générale", style: EDirecteStyles.itemTitleTextStyle),
                     GradesHandler.gotGrades ? Text(GlobalInfos.generalAverage.average[GlobalInfos.currentPeriodCode].toString().replaceAll(".", ","), style: EDirecteStyles.numberTextStyle.copyWith(fontSize: 25.0)) : LoadingAnim(size: 20.0),
@@ -124,11 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text("Prochain cours", style: EDirecteStyles.itemTitleTextStyle),
-                    ScheduleHandler.gotSchedule ? Text("dans ${formatDuration(ScheduleHandler.timeBeforeNextClass)}", style: EDirecteStyles.itemTitleTextStyle) : LoadingAnim(size: 20.0),
+                    ScheduleHandler.gotSchedule ? Text(ScheduleHandler.calculatedNextClass ? "dans ${formatDuration(ScheduleHandler.timeBeforeNextClass)}" : "--", style: EDirecteStyles.itemTitleTextStyle) : LoadingAnim(size: 20.0),
                   ],
                 ),
                 Gap(ScheduleHandler.gotSchedule ? 10.0 : 0.0),
-                ScheduleHandler.gotSchedule ? ScheduledClassCard(scheduledClasses: ScheduleHandler.getNextScheduledClass() ?? [], showOutline: false) : Container(),
+                ScheduleHandler.gotSchedule ? ScheduledClassCard(scheduledClasses: ScheduleHandler.nextClasses, showOutline: false) : Container(),
               ],
             ),
           ),

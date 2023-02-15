@@ -20,9 +20,10 @@ class GradeCard extends StatelessWidget {
       width: 250.0,
       height: 70.0,
       padding: const EdgeInsets.all(10.0),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: EDirecteColors.mainBackgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        border: Border.all(width: 0.0, color: Colors.grey),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

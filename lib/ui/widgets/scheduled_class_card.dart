@@ -31,7 +31,7 @@ class ScheduledClassCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: EDirecteColors.mainBackgroundColor,
         borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-        border: Border.all(width: showOutline && ScheduleHandler.nextClassTime.compareTo(scheduledClasses[0].beginDate) == 0 ? 2.0 : 0.0, color: Colors.grey),
+        border: Border.all(width: showOutline && ScheduleHandler.nextClasses[0].beginDate.compareTo(scheduledClasses[0].beginDate) == 0 ? 2.0 : 0.0, color: Colors.grey),
       ),
       child: Row(
         children: scheduledClasses.length == 1 ? [
@@ -55,7 +55,7 @@ class ScheduledClassCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(scheduledClasses[0].subject.name, style: EDirecteStyles.itemTitleTextStyle.copyWith(fontSize: 15.0), overflow: TextOverflow.ellipsis),
+                Text(scheduledClasses[0].text, style: EDirecteStyles.itemTitleTextStyle.copyWith(fontSize: 15.0), overflow: TextOverflow.ellipsis),
                 const Gap(5.0),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,7 +89,7 @@ class ScheduledClassCard extends StatelessWidget {
                 children: [
                   Bar(width: 3.0, height: 24.0, color: EDirecteColors.getSubjectColor(scheduledClasses[0].subject.code, 1)),
                   const Gap(10.0),
-                  Text(scheduledClasses[0].subject.name, style: EDirecteStyles.itemTitleTextStyle.copyWith(fontSize: 15.0)),
+                  Text(scheduledClasses[0].text, style: EDirecteStyles.itemTitleTextStyle.copyWith(fontSize: 15.0)),
                 ],
               ),
               const Gap(2.0),
@@ -97,7 +97,7 @@ class ScheduledClassCard extends StatelessWidget {
                 children: [
                   Bar(width: 3.0, height: 24.0, color: EDirecteColors.getSubjectColor(scheduledClasses[1].subject.code, 1)),
                   const Gap(10.0),
-                  Text(scheduledClasses[1].subject.name, style: EDirecteStyles.itemTitleTextStyle.copyWith(fontSize: 15.0)),
+                  Text(scheduledClasses[1].text, style: EDirecteStyles.itemTitleTextStyle.copyWith(fontSize: 15.0)),
                 ],
               ),
             ],

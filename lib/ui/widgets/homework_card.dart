@@ -85,9 +85,10 @@ class _HomeworkCardState extends State<HomeworkCard> {
         Container(
           width: MediaQuery.of(context).size.width,
           padding: const EdgeInsets.all(20.0),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: EDirecteColors.mainBackgroundColor,
-            borderRadius: BorderRadius.all(Radius.circular(10.0)),
+            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+            border: Border.all(width: 0.0, color: Colors.grey),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -110,29 +111,33 @@ class _HomeworkCardState extends State<HomeworkCard> {
 
                     return Column(
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () => {
-                                if (!widget.homework!.isGettingContent) _homeworkPopup(homework)
-                              },
-                              child: Row(
-                                children: [
-                                  Bar(width: 3.0, height: 50.0, color: EDirecteColors.getSubjectColor(homework.subject.code, 0)),
-                                  const Gap(10.0),
-                                  Text(homework.subject.name, style: EDirecteStyles.itemTextStyle.copyWith(color: homework.isExam ? Colors.red : Colors.black54))
-                                ],
-                              ),
+                        GestureDetector(
+                          onTap: () => {
+                            if (!widget.homework!.isGettingContent) _homeworkPopup(homework)
+                          },
+                          child: Container(
+                            // To be clickable on the whole row //
+                            decoration: const BoxDecoration(),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Bar(width: 3.0, height: 50.0, color: EDirecteColors.getSubjectColor(homework.subject.code, 0)),
+                                    const Gap(10.0),
+                                    Text(homework.subject.name, style: EDirecteStyles.itemTextStyle.copyWith(color: homework.isExam ? Colors.red : Colors.black54))
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: () => setState(() {
+                                    homework.isDone = !homework.isDone;
+                                    homework.setDone(homework.isDone).then((value) => setState(() => {}));
+                                  }),
+                                  child: Icon(homework.isDone ? FluentIcons.checkbox_checked_24_filled : FluentIcons.checkbox_unchecked_24_regular),
+                                ),
+                              ],
                             ),
-                            GestureDetector(
-                              onTap: () => setState(() {
-                                homework.isDone = !homework.isDone;
-                                homework.setDone(homework.isDone).then((value) => setState(() => {}));
-                              }),
-                              child: Icon(homework.isDone ? FluentIcons.checkbox_checked_24_filled : FluentIcons.checkbox_unchecked_24_regular),
-                            ),
-                          ],
+                          ),
                         ),
                         Gap(index == widget.homework!.homeworks.length - 1 ? 0.0 : 10.0),
                       ],

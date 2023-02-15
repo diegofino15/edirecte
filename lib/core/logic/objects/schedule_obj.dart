@@ -1,6 +1,7 @@
 import 'package:edirecte/core/logic/objects/subject_obj.dart';
 
 class ScheduledClass {
+  late String text;
   late Subject subject;
 
   late DateTime beginDate;
@@ -14,7 +15,7 @@ class ScheduledClass {
   String get beginHour => "${beginDate.toString().split(" ")[1].split(":")[0]}:${beginDate.toString().split(" ")[1].split(":")[1]}";
   String get endHour => "${endDate.toString().split(" ")[1].split(":")[0]}:${endDate.toString().split(" ")[1].split(":")[1]}";
 
-  ScheduledClass(this.subject, String beginDateStr, String endDateStr, this.classroomFullStr) {
+  ScheduledClass(this.subject, String beginDateStr, String endDateStr, this.classroomFullStr, this.text) {
     beginDate = DateTime.parse(beginDateStr);
     endDate = DateTime.parse(endDateStr);
     duration = endDate.difference(beginDate);

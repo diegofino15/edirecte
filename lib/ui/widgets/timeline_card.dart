@@ -33,9 +33,10 @@ class TimelineCard extends StatelessWidget {
       width: MediaQuery.of(context).size.width - 100,
       height: 90.0,
       padding: const EdgeInsets.all(10.0),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         color: EDirecteColors.mainBackgroundColor,
-        borderRadius: BorderRadius.all(Radius.circular(10.0)),
+        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        border: Border.all(width: 0.0, color: Colors.grey),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
